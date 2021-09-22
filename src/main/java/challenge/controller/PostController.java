@@ -49,13 +49,26 @@ public class PostController {
 	
 	}
 	
+	@PutMapping("/posts/{id}")
+	public Optional<Post> updatePost(@PathVariable(value = "id") Long id, @Valid @RequestBody Post post) {
+		
+		Optional<Post> newPost = repository.findById(id);
+		
+		if(newPost.isPresent()) {
+			newPost.get().setTitle(post.getTitle());
+			newPost.get().setText(post.getText());
+            repository.save(newPost);
+        }
+		return null;
+	
+	}
 	
 	@DeleteMapping("/posts/{id}")
 	public Object deletePost(@PathVariable(value = "id") Long id) {
 		
-		Optional<Post> entity = repository.findById(id);
-        repository.delete(entity.get());
-		return entity;
+		Optional<Post> post = repository.findById(id);
+        repository.delete(post.get());
+		return post;
 	
 	}
 }
