@@ -1,8 +1,13 @@
 package challenge.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,5 +33,17 @@ public class PostController {
 		
 		return repository.save(post);
 		
+	}
+	
+	@GetMapping("/posts")
+	public List<Post> listPosts(@Valid @RequestBody Post post) {
+		return (List<Post>) repository.findAll();
+	
+	}
+	
+	@GetMapping("/posts/{id}")
+	public Optional<Post> getPost(@PathVariable(value = "id") Long id) {
+		return repository.findById(id);
+	
 	}
 }
