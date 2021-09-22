@@ -57,7 +57,8 @@ public class PostController {
 		if(newPost.isPresent()) {
 			newPost.get().setTitle(post.getTitle());
 			newPost.get().setText(post.getText());
-            repository.save(newPost);
+            repository.save(newPost.get());
+            return newPost;
         }
 		return null;
 	
@@ -67,7 +68,11 @@ public class PostController {
 	public Object deletePost(@PathVariable(value = "id") Long id) {
 		
 		Optional<Post> post = repository.findById(id);
-        repository.delete(post.get());
+		
+		if(!post.isEmpty()){
+			repository.delete(post.get());
+		}
+        
 		return post;
 	
 	}

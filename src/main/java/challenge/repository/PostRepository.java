@@ -13,5 +13,5 @@ public interface PostRepository extends CrudRepository<Post, Long> {
 	
 	List<Post> findByText(String text);
 
-	void save(Optional<Post> newPost);
+	Optional<Post> save(Optional<Post> newPost);
 }
