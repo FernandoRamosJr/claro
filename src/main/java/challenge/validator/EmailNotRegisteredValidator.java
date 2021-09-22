@@ -15,7 +15,7 @@ public class EmailNotRegisteredValidator implements ConstraintValidator<EmailNot
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
 
-		if (repository.existsByEmail(value)) {
+		if (!repository.existsByEmail(value)) {
 			return true;	
 		}
 		return false;
