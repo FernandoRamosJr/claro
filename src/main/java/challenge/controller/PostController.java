@@ -40,8 +40,13 @@ public class PostController {
 	}
 	
 	@GetMapping("/posts")
-	public List<Post> listPosts(@Valid @RequestBody Post post) {
-		return (List<Post>) repository.findAll();
+	public ResponseEntity<List<Post>> listPosts(@Valid @RequestBody Post post) {
+		
+		List<Post> listPosts = (List<Post>) repository.findAll();		
+		if(listPosts.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}		
+		return ResponseEntity.ok(listPosts );	
 	
 	}
 	
