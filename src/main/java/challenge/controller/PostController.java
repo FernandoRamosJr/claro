@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,17 +52,16 @@ public class PostController {
 	}
 	
 	@PutMapping("/posts/{id}")
-	public Optional<Post> updatePost(@PathVariable(value = "id") Long id, @Valid @RequestBody Post post) {
+	public ResponseEntity<?> updatePost(@PathVariable(value = "id") Long id, @Valid @RequestBody Post post) {
 		
-		Optional<Post> newPost = repository.findById(id);
-		
-		if(newPost.isPresent()) {
-			newPost.get().setTitle(post.getTitle());
-			newPost.get().setText(post.getText());
-            repository.save(newPost.get());
-            return newPost;
-        }
-		return null;
+		Optional<Post> postUpdated = repository.findById(id);
+		if(postUpdated.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}		
+		postUpdated.get().setTitle(post.getTitle());
+		postUpdated.get().setText(post.getText());		
+		repository.save(postUpdated.get());		
+		return new ResponseEntity<>(postUpdated, HttpStatus.OK);
 	
 	}
 	
