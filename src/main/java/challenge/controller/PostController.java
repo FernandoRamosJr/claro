@@ -31,28 +31,26 @@ public class PostController {
     IAuthenticationFacade authenticationFacade;
 	
 	@PostMapping("/posts")
-	public Post newPost(@Valid @RequestBody Post post) {
-		User user = authenticationFacade.getUser();
+	public ResponseEntity<Post> newPost(@Valid @RequestBody Post post) {		
+		User user = authenticationFacade.getUser();		
 		post.setUser(user);
-		
-		return repository.save(post);
-		
+		repository.save(post);		
+		return new ResponseEntity<>(post, HttpStatus.CREATED);		
 	}
 	
+	
 	@GetMapping("/posts")
-	public ResponseEntity<List<Post>> listPosts(@Valid @RequestBody Post post) {
-		
+	public ResponseEntity<List<Post>> listPosts(@Valid @RequestBody Post post) {		
 		List<Post> listPosts = (List<Post>) repository.findAll();		
 		if(listPosts.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}		
 		return ResponseEntity.ok(listPosts );	
-	
 	}
 	
+	
 	@GetMapping("/posts/{id}")
-	public ResponseEntity<?> getPost(@PathVariable(value = "id") Long id) {
-		
+	public ResponseEntity<?> getPost(@PathVariable(value = "id") Long id) {		
 		Optional<Post> post = repository.findById(id);	
 		if(post.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -62,8 +60,7 @@ public class PostController {
 	
 	
 	@PutMapping("/posts/{id}")
-	public ResponseEntity<?> updatePost(@PathVariable(value = "id") Long id, @Valid @RequestBody Post post) {
-		
+	public ResponseEntity<?> updatePost(@PathVariable(value = "id") Long id, @Valid @RequestBody Post post) {		
 		Optional<Post> postUpdated = repository.findById(id);
 		if(postUpdated.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -76,8 +73,7 @@ public class PostController {
 	
 	
 	@DeleteMapping("/posts/{id}")
-	public ResponseEntity<?> deletePost(@PathVariable(value = "id") Long id) {
-		
+	public ResponseEntity<?> deletePost(@PathVariable(value = "id") Long id) {		
 		Optional<Post> post = repository.findById(id);		
 		if(post.isEmpty()) {
 			return ResponseEntity.notFound().build();
