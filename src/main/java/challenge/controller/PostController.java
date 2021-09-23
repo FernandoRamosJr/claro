@@ -46,10 +46,15 @@ public class PostController {
 	}
 	
 	@GetMapping("/posts/{id}")
-	public Optional<Post> getPost(@PathVariable(value = "id") Long id) {
-		return repository.findById(id);
-	
+	public ResponseEntity<?> getPost(@PathVariable(value = "id") Long id) {
+		
+		Optional<Post> post = repository.findById(id);	
+		if(post.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}		
+		return ResponseEntity.ok(post);	
 	}
+	
 	
 	@PutMapping("/posts/{id}")
 	public ResponseEntity<?> updatePost(@PathVariable(value = "id") Long id, @Valid @RequestBody Post post) {
@@ -61,9 +66,9 @@ public class PostController {
 		postUpdated.get().setTitle(post.getTitle());
 		postUpdated.get().setText(post.getText());		
 		repository.save(postUpdated.get());		
-		return new ResponseEntity<>(postUpdated, HttpStatus.OK);
-	
+		return new ResponseEntity<>(postUpdated, HttpStatus.OK);	
 	}
+	
 	
 	@DeleteMapping("/posts/{id}")
 	public ResponseEntity<?> deletePost(@PathVariable(value = "id") Long id) {
