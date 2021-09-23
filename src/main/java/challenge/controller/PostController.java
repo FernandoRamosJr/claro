@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,15 +66,13 @@ public class PostController {
 	}
 	
 	@DeleteMapping("/posts/{id}")
-	public Object deletePost(@PathVariable(value = "id") Long id) {
+	public ResponseEntity<?> deletePost(@PathVariable(value = "id") Long id) {
 		
-		Optional<Post> post = repository.findById(id);
-		
-		if(!post.isEmpty()){
-			repository.delete(post.get());
-		}
-        
-		return post;
-	
+		Optional<Post> post = repository.findById(id);		
+		if(post.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}        
+		repository.delete(post.get());        
+        return ResponseEntity.ok().build();	
 	}
 }
